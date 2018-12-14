@@ -1,0 +1,43 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all; 
+
+entity Laskuri is
+end Laskuri; 
+
+-- Component structure
+architecture SIM of Laskuri is
+
+-- Constants
+constant one : std_logic_vector(3 downto 0) := "0001";
+constant reset_value : std_logic_vector(3 downto 0) := "0000";
+constant initial_value : std_logic_vector(3 downto 0) := "0001";
+constant end_value : std_logic_vector(3 downto 0) := "0110";
+
+signal value : std_logic_vector(3 downto 0);
+
+begin
+
+	i_seven : entity work.seven_segment_coder(RTL) port map(
+	value => value,
+	reset => reset,
+	clock => clock,
+	enable => enable,
+	BCD => BCD,
+	y => y);
+
+process(reset, clock, enable, value)
+begin
+	if reset = '0' then
+		value <= reset_value;
+	elsif rising_edge(clock) then
+		if enable = '0' then -- !!! ACTIVE_LOW !!!
+			if unsigned(value) < unsigned(end_value) then
+				value <= std_logic_vector(unsigned(value) + unsigned(one));
+			else
+				value <= initial_value;
+			end if;
+		end if;
+	end if;
+end process;
+end SIM;
