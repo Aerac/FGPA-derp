@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+-- Component I/O
+entity seven_segment_coder is
+port(
+	reset  : in std_logic; 
+	clock  : in std_logic; 
+	enable : in std_logic; 
+	BCD    : in std_logic_vector(3 downto 0);-- 4-bit BCD
+	y 	   : out std_logic_vector(6 downto 0));
+end seven_segment_coder;
+
+-- Component structure
+architecture RTL of seven_segment_coder is
+
+begin
+process(BCD)
+begin
+	case BCD is
+		when "0000" => y <= "1111110"; -- 0
+		when "0001" => y <= "0110000"; -- 1
+		when "0010" => y <= "1101101"; -- 2
+		when "0011" => y <= "1111001"; -- 3
+		when "0100" => y <= "0110011"; -- 4
+		when "0101" => y <= "1011011"; -- 5
+		when "0110" => y <= "1011111"; -- 6
+		when "0111" => y <= "1110000"; -- 7
+		when "1000" => y <= "1111111"; -- 8
+		when "1001" => y <= "1111011"; -- 9
+		when "1010" => y <= "1110111"; -- A
+		when "1011" => y <= "0011111"; -- B
+		when "1100" => y <= "1001110"; -- C
+		when "1101" => y <= "0111101"; -- D
+		when "1110" => y <= "1001111"; -- E
+		when "1111" => y <= "1000111"; -- F
+		when others => y <= "1111111"; -- nothing
+	end case;
+end process;
+
+end RTL;
